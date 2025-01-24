@@ -44,10 +44,10 @@ RUN cd /home/ubuntu/opencv && \
     rm 3.4.16.zip
 
     # Build
-# RUN cd /home/ubuntu/opencv/build && \
-#     cmake -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib-3.4.16/modules ../opencv-3.4.16/ && \
-#     cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local  -D INSTALL_C_EXAMPLES=ON  -D INSTALL_PYTHON_EXAMPLES=ON  -D OPENCV_GENERATE_PKGCONFIG=ON  -D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib-3.4.16/modules -D BUILD_EXAMPLES=ON ../opencv-3.4.16 && \
-#     make -j10
+RUN cd /home/ubuntu/opencv/build && \
+    cmake -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib-3.4.16/modules ../opencv-3.4.16/ && \
+    cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local  -D INSTALL_C_EXAMPLES=ON  -D INSTALL_PYTHON_EXAMPLES=ON  -D OPENCV_GENERATE_PKGCONFIG=ON  -D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib-3.4.16/modules -D BUILD_EXAMPLES=ON ../opencv-3.4.16 && \
+    make -j10
 
 
 # Install RealSense SDK
