@@ -83,8 +83,6 @@ RUN cd /home/ubuntu/Downloads && wget https://gitlab.com/libeigen/eigen/-/archiv
     mv /home/ubuntu/Downloads/eigen-3.4-rc1/signature_of_eigen3_matrix_library /usr/include/eigen3/signature_of_eigen3_matrix_library && \
     rm -rf /home/ubuntu/Downloads/eigen-3.4-rc1
 
-# Install any ROS package that is still missing
-
 # Install conda and (ros_conda) env
 RUN cd /home/ubuntu/Downloads && \
     wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh" -O /home/ubuntu/Downloads/miniforge3.sh && \
@@ -92,6 +90,9 @@ RUN cd /home/ubuntu/Downloads && \
     rm /home/ubuntu/Downloads/miniforge3.sh && \
     eval "$(/home/ubuntu/miniforge3/bin/conda shell.bash hook)" && \
     conda init bash
+
+# Install any ROS package that is still missing
+RUN apt-get install -y ros-noetic-pcl-conversions ros-noetic-pcl-ros ros-noetic-ddynamic-reconfigure
 
 USER ubuntu
 
@@ -117,6 +118,10 @@ RUN . /home/ubuntu/miniforge3/etc/profile.d/conda.sh && \
     mamba install -y \
         pytorch-lightning \
         -c conda-forge && \
+    mamba clean -afy
+
+RUN . /home/ubuntu/miniforge3/etc/profile.d/conda.sh && \
+    mamba activate ros_conda && \
     pip install --no-cache-dir \
         pyyaml \
         rospkg \
@@ -125,15 +130,21 @@ RUN . /home/ubuntu/miniforge3/etc/profile.d/conda.sh && \
         pycryptodomex \
         gnupg \
         opencv-python \
-        joblib && \
-    mamba clean -afy
+        joblib
+
+RUN . /home/ubuntu/miniforge3/etc/profile.d/conda.sh && \
+    mamba activate ros_conda && \
+    pip install --no-cache-dir \
+        empy==3.3.4
 
 RUN cd /home/ubuntu/Documents && \
     git clone https://<yourghptoken>@github.com/armlabstanford/ARMLab_smart_belt && \
-    cd ARMLab_smart_belt/catkin_ws && \
-    source /opt/ros/noetic/setup.bash && \
-    catkin_make && \
-    source devel/setup.bash
+    cd ARMLab_smart_belt/catkin_ws
+    # source /opt/ros/noetic/setup.bash && \
+    # . /home/ubuntu/miniforge3/etc/profile.d/conda.sh && \
+    # conda activate ros_conda && \
+    # catkin_make && \
+    # source devel/setup.bash
 
 COPY ./entrypoint.sh /
 USER root
